@@ -1,6 +1,13 @@
-import dotenv from "dotenv"
-export default (sequelize, DataTypes) => {
+import { DataTypes } from 'sequelize';
+import dotenv from "dotenv";
+import bcrypt from 'bcrypt';
+
+const User = (sequelize) => {
     const User = sequelize.define("User", {
+        uuid: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4
+        },
         firstName: {
             type: DataTypes.STRING(100),
             allowNull: false,
@@ -33,10 +40,11 @@ export default (sequelize, DataTypes) => {
     })
     User.beforeSave(async (user, options) => {
         if (user.changed('password')) {
-            user.password = await bcrypt.hash(user.password, process.env.SALT_ROUND);
+            user.password = await bcrypt.hash(user.password, parseInt(process.env.SALT_ROUND));
         }
     });
 
-
-    return User
+    return User;
 }
+
+export default User;
