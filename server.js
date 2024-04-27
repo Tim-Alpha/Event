@@ -21,7 +21,7 @@ app.use((err, req, res, next) => {
 // Async function to handle DB sync and server start
 const startServer = async () => {
     try {
-        await db.sequelize.sync({ alter: true });
+        // await db.sequelize.sync({ alter: true });
         console.log('Database synchronized successfully');
         app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
