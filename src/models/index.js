@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 
 const baseName = basename(__filename);
 const env = _env.SERVER_ENV || 'development';
-import config from '../config/config.js';
+import config from '../../config/config.js';
 
 const db = {};
 
