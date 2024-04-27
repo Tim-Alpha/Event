@@ -25,22 +25,20 @@ if (environmentConfig.use_env_variable) {
 }
 
 const importModel = async (file) => {
-    const { default: model } = await import(join(__dirname, file));
-    db[model.name] = model(sequelize, DataTypes);
+    try {
+        const { default: model } = await import(join(__dirname, file));
+        db[model.name] = model(sequelize, DataTypes);
+    } catch (error) {
+        console.error(`Error importing model from file ${file}:`, error);
+    }
 };
 
-readdirSync(__dirname)
-    .filter(file => {
-        return (
-            file.indexOf('.') !== 0 &&
-            file !== baseName &&
-            file.slice(-3) === '.js' &&
-            file.indexOf('.test.js') === -1
-        );
-    })
-    .forEach(async file => {
-        await importModel(file);
-    });
+const modelFiles = readdirSync(__dirname)
+    .filter(file => file.indexOf('.') !== 0 && file !== baseName && file.slice(-3) === '.js' && file.indexOf('.test.js') === -1);
+
+for (let file of modelFiles) {
+    await importModel(file);
+}
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
