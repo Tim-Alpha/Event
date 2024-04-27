@@ -1,8 +1,7 @@
-// userService.js
 import db from '../models/index.js'; 
+const { User } = db;
 
 const createUser = async (userData) => {
-    const { User } = db;
     try {
         const user = await User.create(userData);
         return user;
@@ -11,4 +10,13 @@ const createUser = async (userData) => {
     }
 };
 
-export { createUser };
+const getAllUsers = async () => {
+    try {
+        const users = await User.findAll();
+        return users;
+    } catch (error) {
+        throw new Error('Error in getting all users: ' + error.message);
+    }
+};
+
+export { createUser, getAllUsers };
