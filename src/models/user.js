@@ -2,6 +2,8 @@ import { DataTypes } from 'sequelize';
 import dotenv from "dotenv";
 import bcrypt from 'bcrypt';
 
+dotenv.config();
+
 const User = (sequelize) => {
     const User = sequelize.define("User", {
         uuid: {
@@ -30,19 +32,28 @@ const User = (sequelize) => {
         role: {
             type: DataTypes.ENUM("ADMIN", "USER", "OWNER"),
             allowNull: false,
-            default: "USER",
-        }      
-    },
-    {
+            defaultValue: "USER",
+        }
+    }, {
         tableName: "users",
         underscored: true,
         paranoid: true,
-    })
-    User.beforeSave(async (user, options) => {
-        if (user.changed('password')) {
-            user.password = await bcrypt.hash(user.password, parseInt(process.env.SALT_ROUND));
+        hooks: {
+            beforeSave: async (user, options) => {
+                if (user.changed('password')) {
+                    const saltRounds = parseInt(process.env.SALT_ROUNDS || '10');
+                    user.password = await bcrypt.hash(user.password, saltRounds);
+                }
+            },
         }
     });
+
+    User.prototype.toJSON = function () {
+        let attributes = Object.assign({}, this.get());
+        delete attributes.id;
+        delete attributes.password;
+        return attributes;
+    };
 
     return User;
 }
