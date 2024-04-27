@@ -10,6 +10,16 @@ const User = (sequelize) => {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4
         },
+        username: {
+            type:DataTypes.STRING(100),
+            allowNull: false,
+            unique: true
+        },
+        role: {
+            type: DataTypes.ENUM("ADMIN", "USER", "OWNER"),
+            allowNull: false,
+            defaultValue: "USER",
+        },
         firstName: {
             type: DataTypes.STRING(100),
             allowNull: false,
@@ -21,18 +31,27 @@ const User = (sequelize) => {
             type: DataTypes.STRING(100),
             allowNull: true
         },
+        email: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+            unique: true,
+        },
         password: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        email: {
+        address: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: true,
         },
-        role: {
-            type: DataTypes.ENUM("ADMIN", "USER", "OWNER"),
+        dob: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        mobile: {
+            type: DataTypes.STRING(10),
             allowNull: false,
-            defaultValue: "USER",
+            unique: true
         }
     }, {
         tableName: "users",
