@@ -46,10 +46,6 @@ Object.keys(db).forEach(modelName => {
     }
 });
 
-console.log('All models were synchronized successfully.');
-// await sequelize.sync({alter: true});
-await sequelize.sync();
-
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
