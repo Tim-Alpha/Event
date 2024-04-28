@@ -71,8 +71,15 @@ const User = (sequelize) => {
         let attributes = Object.assign({}, this.get());
         delete attributes.id;
         delete attributes.password;
+        delete attributes.deletedAt;
         return attributes;
     };
+
+    // Define the association between Venue and User models
+    User.associate = (models) => {
+        User.hasMany(models.Venue, { foreignKey: 'ownerId', as: 'venues', onDelete: 'CASCADE' });
+    };
+    
 
     return User;
 }
