@@ -9,7 +9,7 @@ const createUser = async (req, res) => {
                 "message": "Invalid mobile number"
             });
         }
-        const user = await userService.createUser(req.body);
+        const user = await userService.createUser(userData);
 
         res.status(201).json(user);
     } catch (error) {
