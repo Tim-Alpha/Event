@@ -4,7 +4,8 @@ const Venue = (sequelize) => {
     const Venue = sequelize.define("Venue", {
         uuid: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4
+            defaultValue: DataTypes.UUIDV4,
+            unique: true
         },
         venueName: {
             type: DataTypes.STRING(255),
@@ -12,6 +13,10 @@ const Venue = (sequelize) => {
         },
         description: {
             type: DataTypes.TEXT,
+            allowNull: true
+        },
+        imageUrl: {
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         location: {
@@ -50,6 +55,7 @@ const Venue = (sequelize) => {
     // Define the association between Venue and User models
     Venue.associate = (models) => {
         Venue.belongsTo(models.User, { foreignKey: 'ownerId', as: 'owner', onDelete: 'CASCADE' });
+        Venue.hasMany(models.Gallery, { foreignKey: 'venueId', as: 'galleries', onDelete: 'CASCADE' });
     };
     
 

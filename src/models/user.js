@@ -8,7 +8,8 @@ const User = (sequelize) => {
     const User = sequelize.define("User", {
         uuid: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4
+            defaultValue: DataTypes.UUIDV4,
+            unique: true
         },
         username: {
             type:DataTypes.STRING(100),
