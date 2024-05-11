@@ -56,6 +56,7 @@ const Venue = (sequelize) => {
     Venue.associate = (models) => {
         Venue.belongsTo(models.User, { foreignKey: 'ownerId', as: 'owner', onDelete: 'CASCADE' });
         Venue.hasMany(models.Gallery, { foreignKey: 'venueId', as: 'galleries', onDelete: 'CASCADE' });
+        Venue.hasMany(models.Event, { foreignKey: 'venueId', as: 'events', onDelete: 'CASCADE' });
     };
     
 
