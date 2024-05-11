@@ -37,6 +37,14 @@ const User = (sequelize) => {
             allowNull: false,
             unique: true,
         },
+        isEmailVerified: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        isMobileVerified: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         password: {
             type: DataTypes.STRING(255),
             allowNull: false
@@ -44,6 +52,10 @@ const User = (sequelize) => {
         address: {
             type: DataTypes.STRING(255),
             allowNull: true,
+        },
+        profileUrl: {
+            type: DataTypes.STRING(255),
+            allowNull: true
         },
         dob: {
             type: DataTypes.DATE,
@@ -76,9 +88,11 @@ const User = (sequelize) => {
         return attributes;
     };
 
-    // Define the association between Venue and User models
+    // Define the association between Other models and User models
     User.associate = (models) => {
         User.hasMany(models.Venue, { foreignKey: 'ownerId', as: 'venues', onDelete: 'CASCADE' });
+        User.hasMany(models.Token, { foreignKey: 'userId', as: 'tokens', onDelete: 'CASCADE' });
+        User.hasMany(models.Event, { foreignKey: 'userId', as: 'events', onDelete: 'CASCADE' });
     };
     
 

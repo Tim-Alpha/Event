@@ -1,4 +1,5 @@
 import db from '../models/index.js'; 
+import bcrypt from 'bcrypt';
 const { User } = db;
 
 const createUser = async (userData) => {
@@ -7,6 +8,24 @@ const createUser = async (userData) => {
         return user;
     } catch (error) {
         throw new Error('Error creating the user: ' + error.message);
+    }
+};
+
+const validateUserCredentials = async (username, password) => {
+    try {
+        const user = await User.findOne({
+            where: { username }
+        });
+        if (!user) {
+            return null;
+        }
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            return null;
+        }
+        return user;
+    } catch (error) {
+        throw new Error('Authentication failed: ' + error.message);
     }
 };
 
@@ -40,44 +59,32 @@ const getUserByUUID = async (uuid) => {
     }
 }
 
-const updateUserByUUID = async (userData, uuid) => {
+const updateUser = async (userData, existingUser) => {
     try {
-        await User.update(userData, { where: { uuid } });
-        const updatedUser = await User.findOne({ where: { uuid } });
-        return updatedUser;
+        Object.assign(existingUser, userData);
+        await existingUser.save();
+        return existingUser;
     } catch (error) {
-        throw new Error('Error while updating user by UUID: ' + error.message);
+        throw new Error('Error while updating user: ' + error.message);
     }
 }
 
-const deleteUserByUUID = async (uuid) => {
+const deleteUser = async (existingUser) => {
     try {
-        const user = await User.findOne({ where: { uuid } });
-        if (!user) {
-            throw new Error('User not found');
-        }
-        // Soft delete the user
-        await user.destroy();
-        return user;
+        await existingUser.destroy();
+        return existingUser;
     } catch (error) {
-        throw new Error('Error while deleting user by uuid: ' + error.message);
+        throw new Error('Error while deleting user: ' + error.message);
     }
 }
 
-const forceDeleteUserByUUID = async (uuid) => {
+const forceDeleteUser = async (existingUser) => {
     try {
-        const user = await User.findOne({ where: { uuid } });
-        if (!user) {
-            throw new Error('User not found');
-        }
-
-        // Hard delete the user
-        await user.destroy({ force: true });
-        return user;
+        await existingUser.destroy({ force: true });
+        return existingUser;
     } catch (error) {
-        throw new Error('Error while deleting user by uuid: ' + error.message);
+        throw new Error('Error while deleting user: ' + error.message);
     }
 }
 
-
-export { createUser, getAllUsers, getUserByUUID, updateUserByUUID, deleteUserByUUID, forceDeleteUserByUUID };
+export { createUser, validateUserCredentials, getAllUsers, getUserByUUID, updateUser, deleteUser, forceDeleteUser };
