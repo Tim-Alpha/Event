@@ -79,7 +79,7 @@ const verifyNumber = async (req, res) => {
 
         res.status(200).json(response("success", "Mobile number verified successfully"));
     } catch (error) {
-        res.status(500).json(response("error", "Login failed"));
+        res.status(500).json(response("error", "ERROR: " + error));
     }
 }
 
