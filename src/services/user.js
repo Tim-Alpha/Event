@@ -68,7 +68,7 @@ const verifyNumber = async (mobile) => {
         if (!user) {
             return false;
         }
-        
+
         user.isMobileVerified = true;
         await user.save();
         return true;
@@ -106,4 +106,4 @@ const forceDeleteUser = async (existingUser) => {
     }
 }
 
-export { createUser, validateUserCredentials, getAllUsers, getUserByUUID, updateUser, deleteUser, forceDeleteUser };
+export { createUser, validateUserCredentials, getAllUsers, getUserByUUID, updateUser, deleteUser, forceDeleteUser, verifyNumber };
