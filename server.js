@@ -1,6 +1,7 @@
 import express from 'express';
-import db from './src/models/index.js';
 import cors from 'cors';
+import { exec } from 'child_process';
+import db from './src/models/index.js';
 import userRouter from './src/routers/user.js';
 import venueRouter from './src/routers/venue.js';
 
@@ -20,11 +21,24 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
+app.get('/v1/migrations/run/:password', (req, res) => {
+    const password = req.params.password;
+    if (password !== 'sachin1234') {
+        res.status(400).json({message: "Sorry wrong password!"});
+    }
+    exec('sequelize db:migrate', (error, stdout, stderr) => {
+        if (error) {
+            res.status(500).json({message: "Sorry error in executing migration!"});
+        }
+        res.status(200).json({message: "Migration run completed successfully"});
+    })
+});
+
 // Async function to handle DB sync and server start
 const startServer = async () => {
     try {
         // await db.sequelize.sync({alter: true});
-        await db.sequelize.sync();
+        // await db.sequelize.sync();
         console.log('Database synchronized successfully');
         app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
