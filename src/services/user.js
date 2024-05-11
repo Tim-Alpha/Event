@@ -59,6 +59,25 @@ const getUserByUUID = async (uuid) => {
     }
 }
 
+const verifyNumber = async (mobile) => {
+    try {        
+        const user = await User.findOne({
+            where: { mobile },
+        });
+
+        if (!user) {
+            return false;
+        }
+        
+        user.isMobileVerified = true;
+        await user.save();
+        return true;
+    } catch (error) {
+        throw new Error('Error while verifying otp: ' + error);
+    }
+
+}
+
 const updateUser = async (userData, existingUser) => {
     try {
         Object.assign(existingUser, userData);
