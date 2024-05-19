@@ -29,13 +29,34 @@ const Event = ( sequelize ) => {
     }, {
         tableName: "events",
         underscored: true,
-        paranoid: true
+        paranoid: true,
+        hooks: {
+            afterCreate: async (event, options) => {
+                try {
+                    const user = await event.getUser();
+                    const venue = await event.getVenue();
+                    event.setDataValue('user', user);
+                    event.setDataValue('venue', venue);
+                } catch (error) {
+                    console.error('Error in fetching user & venue data: ' + error);
+                }
+            }
+        }
     });
+
+    Event.prototype.toJSON = function () {
+        let attributes = Object.assign({}, this.get());
+        delete attributes.id;
+        delete attributes.userId;
+        delete attributes.venueId;
+        delete attributes.deletedAt;
+
+        return attributes;
+    }
 
     Event.associate = (models) => {
         Event.belongsTo(models.User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
         Event.belongsTo(models.Venue, { foreignKey: 'venueId', as: 'venue', onDelete: 'CASCADE' });
-        Event.hasMany(models.Booking, { foreignKey: 'eventId', as: 'bookings', onDelete: 'CASCADE' });
     };
 
     return Event;
