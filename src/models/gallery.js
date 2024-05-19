@@ -1,5 +1,4 @@
 import { DataTypes } from "sequelize";
-import { underscoredIf } from "sequelize/lib/utils";
 
 const Gallery = (sequelize) => {
     const Gallery = sequelize.define("Gallery", {
