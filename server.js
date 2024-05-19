@@ -4,6 +4,8 @@ import { exec } from 'child_process';
 import db from './src/models/index.js';
 import userRouter from './src/routers/user.js';
 import venueRouter from './src/routers/venue.js';
+import eventRouter from './src/routers/event.js';
+import bookingRouter from './src/routers/booking.js';
 
 const app = express();
 const port = 3001;
@@ -14,6 +16,8 @@ const v1 = '/api/v1';
 
 app.use(v1, userRouter);
 app.use(v1, venueRouter);
+app.use(v1, eventRouter);
+app.use(v1, bookingRouter);
 
 // Error handling middleware should be placed after all other middleware/route usage.
 app.use((err, req, res, next) => {
