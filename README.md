@@ -16,7 +16,7 @@ This is the backend server for the Event Eclipse project.
 3. To run server on development environment:
    - Copy the contents of the `.env.development` file and paste them into a new file named `.env`.
      ```bash
-     cp .env.example .env
+     cp .env.develompent .env
      ```     
    - In the development server configuration, the database is automatically synchronized (`sequelize.sync()`), ensuring that any changes to the Sequelize models are reflected in the database schema.
 
