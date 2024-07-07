@@ -58,6 +58,7 @@ const Venue = (sequelize) => {
         Venue.hasMany(models.Gallery, { foreignKey: 'venueId', as: 'galleries', onDelete: 'CASCADE' });
         Venue.hasMany(models.Event, { foreignKey: 'venueId', as: 'events', onDelete: 'CASCADE' });
         Venue.hasMany(models.Booking, { foreignKey: 'venueId', as: 'bookings', onDelete: 'CASCADE' });
+        Venue.hasMany(models.Review, { foreignKey: 'venueId', as: 'reviews', onDelete: 'CASCADE' });
     };
     
 
