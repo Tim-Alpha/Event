@@ -1,5 +1,7 @@
 import crypto from 'crypto';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const padOTP = (num) => num.toString().padStart(4, '0');
 
 const generateOTP = (mobileNumber) => {
