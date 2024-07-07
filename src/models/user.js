@@ -93,6 +93,7 @@ const User = (sequelize) => {
         User.hasMany(models.Venue, { foreignKey: 'ownerId', as: 'venues', onDelete: 'CASCADE' });
         User.hasMany(models.Token, { foreignKey: 'userId', as: 'tokens', onDelete: 'CASCADE' });
         User.hasMany(models.Event, { foreignKey: 'userId', as: 'events', onDelete: 'CASCADE' });
+        User.hasMany(models.Review, { foreignKey: 'userId', as: 'review', onDelete: 'CASCADE' });
     };
     
 
