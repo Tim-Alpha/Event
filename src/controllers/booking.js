@@ -33,9 +33,9 @@ const getAllBooking = async (req, res) => {
         if (!user) {
             res.status(404).json(response("failed", "User not found"))
         }
-        // if(user.dataValues.role !== "OWNER" || user.dataValues.role !== "ADMIN") {
-        //     res.status(401).json(response("failed", "Unauthorized"))
-        // }
+        if(user.dataValues.role !== "OWNER" || user.dataValues.role !== "ADMIN") {
+            res.status(401).json(response("failed", "Unauthorized"))
+        }
 
         const bookings = await bookingService.getAllBookings();
         res.status(200).json(bookings);
