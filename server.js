@@ -44,7 +44,7 @@ app.get('/v1/migrations/run/:password', (req, res) => {
 const startServer = async () => {
     try {
         // await db.sequelize.sync({alter: true});
-        await db.sequelize.sync();
+        // await db.sequelize.sync();
         console.log('Database synchronized successfully');
         app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
