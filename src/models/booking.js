@@ -5,7 +5,8 @@ const Booking = (sequelize) => {
         uuid: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         status: {
             type: DataTypes.STRING(30),

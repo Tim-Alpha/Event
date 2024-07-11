@@ -5,6 +5,7 @@ const Review = ( sequelize ) => {
         uuid: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
+            unique: true
         },
         content: {
             type: DataTypes.STRING(255),
