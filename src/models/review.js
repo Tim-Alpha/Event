@@ -1,4 +1,3 @@
-// id, userId, venuId, description, rating, createdAt, deletedAt
 import { DataTypes } from "sequelize";
 
 const Review = ( sequelize ) => {
@@ -7,7 +6,7 @@ const Review = ( sequelize ) => {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
         },
-        description: {
+        content: {
             type: DataTypes.STRING(255),
             allowNull: true,
         },
@@ -19,7 +18,19 @@ const Review = ( sequelize ) => {
         tableName: "review",
         underscored: true,
         paranoid: true,
-    });
+        hooks: {
+            afterCreate: async (rating, options) => {
+                try {
+                    const user = await rating.getUser();
+                    const venue = await rating.getVenue();
+                    rating.setDataValue('user', user);
+                    rating.setDataValue('venue', venue);
+                } catch (error) {
+                    console.error('Error in fetching owner data: ' + error);
+                }
+            }
+        }
+    },);
 
     Review.prototype.toJSON = function () {
         let attributes = Object.assign({}, this.get());
