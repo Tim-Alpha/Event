@@ -3,6 +3,7 @@ const { Venue } = db;
 
 const createVenue = async (data) => {
     try {
+        data.ownerId = user.id;
         const venue = await Venue.create(data);
         return venue;
     } catch (error) {

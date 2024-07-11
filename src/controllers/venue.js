@@ -4,7 +4,14 @@ import { response } from '../services/utils.js';
 const createVenue = async (req, res) => {
     try {
         const venueData = req.body;
-        const venue = await venueService.createVenue(venueData);
+        const user = req.user;
+        if(!user) {
+            res.status(400).json({
+                status: false,
+                message: "User not logged in"
+            });
+        }
+        const venue = await venueService.createVenue(venueData, user);
         res.status(201).json({
             "status": "success",
             "message": "Venue created successfully",
