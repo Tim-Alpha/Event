@@ -60,7 +60,6 @@ const createUser = async (req, res) => {
     }
 };
 
-
 const userLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -82,18 +81,22 @@ const userLogin = async (req, res) => {
 
 const sendOtp = async (req, res) => {
     try{
-        let mobileNumber = req.body.number
-        if (!mobileNumber) {
+        let { number, email } = req.body
+        if (!number) {
             return res.status(400).json(response("failed", "Invalid mobile number parameter"));
         }
-        let otp = generateOTP(mobileNumber);
-        const status  = await event.sendOtp(mobileNumber, otp);
-
-        if (status !== 200) {
-            return res.status(500).json(response("error", "Otp sending failed, please try again"));
+        let otp = generateOTP(number);
+        const status  = await event.sendOtp(number, otp);
+        if (email) {
+            const emailStatus = await sendOtpEmail(email, otp);
+            res.status(200).json(response("success", `Otp to ${number} & ${email} sent successfully`));
         }
 
-        res.status(200).json(response("success", `Otp to ${mobileNumber} sent successfully`));
+        // if (status !== 200) {
+        //     return res.status(500).json(response("error", "Otp sending failed, please try again"));
+        // }
+
+        res.status(200).json(response("success", `Otp to ${number} sent successfully`));
     } catch(error) {
         res.status(500).json(response("error", "otp sending failed"));
     }
@@ -122,9 +125,9 @@ const verifyNumber = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     try {
-        const users = await userService.getAllUsers();
-        
-        res.status(201).json(response("success", "User created successfully", "users", users));
+        const { page = 1, pageSize = 10 } = req.query;
+        const users = await userService.getAllUsers(page, pageSize);
+        res.status(200).json(response("success", "Users retrieved successfully", "users", users));
     } catch (error) {
         res.status(500).json(response("error", error.message));
     }
@@ -142,7 +145,6 @@ const getUserByUUID = async (req, res) => {
         res.status(500).json(response("error", "Something went wrong! " + error));
     }
 }
-
 
 const getUserByToken = async (req, res) => {
     try {

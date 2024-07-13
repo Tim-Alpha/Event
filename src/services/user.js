@@ -29,16 +29,29 @@ const validateUserCredentials = async (username, password) => {
     }
 };
 
-const getAllUsers = async () => {
+const getAllUsers = async (page, pageSize) => {
     try {
-        const users = await User.findAll({
+        const pageNum = parseInt(page, 10) || 1;
+        const pageLimit = parseInt(pageSize, 10) || 10;
+        const offset = (pageNum - 1) * pageLimit;
+
+        const { count, rows } = await User.findAndCountAll({
             include: [{
                 model: db.Venue,
                 as: 'venues'
-            }]
+            }],
+            limit: pageLimit,
+            offset: offset,
+            order: [['createdAt', 'DESC']]
         });
-
-        return users;
+        const maxPageSize = Math.ceil(count / pageLimit);
+        return {
+            users: rows,
+            currentPage: pageNum,
+            maxPageSize: maxPageSize,
+            pageSize: pageLimit,
+            totalUsers: count
+        };
     } catch (error) {
         throw new Error('Error in getting all users: ' + error.message);
     }

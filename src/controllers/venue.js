@@ -27,17 +27,18 @@ const createVenue = async (req, res) => {
 
 const getAllVenues = async (req, res) => {
     try {
-        const venueData = await venueService.getAllVenues();
+        const { page = 1, pageSize = 10 } = req.query;
+        const venueData = await venueService.getAllVenues(page, pageSize);
         res.status(200).json({
-            "status": "success",
-            "message": "Venues fetched successfully",
-            "venues": venueData
+            status: "success",
+            message: "Venues fetched successfully",
+            venues: venueData
         });
     } catch (error) {
         res.status(500).json({
-            "status": "error",
-            "message": "Something went wrong!" + error
-        });        
+            status: "error",
+            message: "Something went wrong! " + error.message
+        });
     }
 }
 

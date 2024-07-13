@@ -1,3 +1,4 @@
+import { parse } from 'path';
 import db from '../models/index.js';
 const { Venue } = db;
 
@@ -11,18 +12,31 @@ const createVenue = async (data, user) => {
     }
 }
 
-const getAllVenues = async () => {
+const getAllVenues = async (page, pageSize) => {
     try {
-        const venues = await Venue.findAll({
+        const pageNum = parseInt(page, 10) || 1;
+        const pageLimit = parseInt(pageSize, 10) || 10;
+        const offset = (pageNum - 1) * pageLimit;
+
+        const { count, rows } = await Venue.findAndCountAll({
             include: [{
                 model: db.User,
                 as: 'owner',
                 foreignKey: 'ownerId'
-            }]
+            }],
+            limit: pageLimit,
+            offset: offset,
         });
-        return venues;
+        const maxPageSize = Math.ceil(count / pageLimit);
+        return {
+            venues: rows,
+            currentPage: pageNum,
+            maxPageSize: maxPageSize,
+            pageSize: pageLimit,
+            totalVenues: count
+        };
     } catch (error) {
-        throw new Error('Error in fetching venues: ' + error)
+        throw new Error('Error in fetching venues: ' + error.message);
     }
 }
 
