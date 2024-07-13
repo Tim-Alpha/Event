@@ -2,27 +2,64 @@ import * as userService from '../services/user.js';
 import * as middleware from '../middlewares/authentication.js';
 import * as event from '../event/sendOtp.js';
 import { response, generateOTP, verifyOTP } from '../services/utils.js';
+import db from '../models/index.js';
+import { sendOtpEmail } from '../event/sendOtpEmail.js';
+const { User, sequelize } = db;
+
+const restrictedUsernames = ["event", "admin", "eclipse", "guest", "test", "owner"];
 
 const createUser = async (req, res) => {
+    const transaction = await sequelize.transaction();
     try {
         const userData = req.body;
-        if (userData.mobile.length !== 10 && !isNaN(userData.mobile)) {
+
+        if (userData.role === "ADMIN") {
+            return res.status(400).json(response("failed", "Invalid role"));
+        }
+
+        if (userData.mobile.length !== 10 || isNaN(userData.mobile)) {
             return res.status(400).json(response("failed", "Invalid mobile number"));
         }
-        const user = await userService.createUser(userData);
+
+        const restrictedUsernames = ["event", "admin", "eclipse", "guest", "test"];
+        if (restrictedUsernames.includes(userData.username.toLowerCase())) {
+            return res.status(400).json(response("failed", "Username not allowed"));
+        }
+
+        const mobileExists = await userService.findUserByMobile(userData.mobile);
+        if (mobileExists) {
+            return res.status(400).json(response("failed", "Mobile number already exists"));
+        }
+
+        const emailExists = await userService.findUserByEmail(userData.email);
+        if (emailExists) {
+            return res.status(400).json(response("failed", "Email already exists"));
+        }
+
+        const usernameExists = await userService.findUserByUsername(userData.username);
+        if (usernameExists) {
+            return res.status(400).json(response("failed", "Username already exists"));
+        }
+
+        const user = await User.create(userData, { transaction });
 
         let otp = generateOTP(userData.mobile);
-        const status  = await event.sendOtp(userData.mobile, otp);
-        
-        if (status !== 200) {
+        const smsStatus = await event.sendOtp(userData.mobile, otp);
+        const emailStatus = await sendOtpEmail(userData.email, otp);
+
+        if (!emailStatus || smsStatus !== 200 ) {
+            await transaction.rollback();
             return res.status(500).json(response("error", "Otp sending failed, please try again"));
         }
 
+        await transaction.commit();
         res.status(201).json(response("success", "Account created successful!", "data", { message: "Otp sent successfully", user }));
     } catch (error) {
+        await transaction.rollback();
         res.status(500).json(response("error", error.message));
     }
 };
+
 
 const userLogin = async (req, res) => {
     try {

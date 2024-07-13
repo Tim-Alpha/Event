@@ -106,4 +106,37 @@ const forceDeleteUser = async (existingUser) => {
     }
 }
 
-export { createUser, validateUserCredentials, getAllUsers, getUserByUUID, updateUser, deleteUser, forceDeleteUser, verifyNumber };
+const findUserByMobile = async (mobile) => {
+    try {
+        const user = await User.findOne({
+            where: { mobile }
+        });
+        return user;
+    } catch (error) {
+        throw new Error('Error finding user by mobile: ' + error.message);
+    }
+};
+
+const findUserByEmail = async (email) => {
+    try {
+        const user = await User.findOne({
+            where: { email }
+        });
+        return user;
+    } catch (error) {
+        throw new Error('Error finding user by email: ' + error.message);
+    }
+};
+
+const findUserByUsername = async (username) => {
+    try {
+        const user = await User.findOne({
+            where: { username }
+        });
+        return user;
+    } catch (error) {
+        throw new Error('Error finding user by username: ' + error.message);
+    }
+};
+
+export { createUser, validateUserCredentials, getAllUsers, getUserByUUID, updateUser, deleteUser, forceDeleteUser, verifyNumber, findUserByMobile, findUserByEmail, findUserByUsername };
