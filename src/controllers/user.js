@@ -47,10 +47,10 @@ const createUser = async (req, res) => {
         const smsStatus = await event.sendOtp(userData.mobile, otp);
         const emailStatus = await sendOtpEmail(userData.email, otp);
 
-        if (!emailStatus || smsStatus !== 200 ) {
-            await transaction.rollback();
-            return res.status(500).json(response("error", "Otp sending failed, please try again"));
-        }
+        // if (!emailStatus || smsStatus !== 200 ) {
+        //     await transaction.rollback();
+        //     return res.status(500).json(response("error", "Otp sending failed, please try again"));
+        // }
 
         await transaction.commit();
         res.status(201).json(response("success", "Account created successful!", "data", { message: "Otp sent successfully", user }));
