@@ -69,7 +69,7 @@ const userLogin = async (req, res) => {
             return res.status(401).json(response("failed", "Invalid credentials"));
         }
         
-        if(user.isMobileVerified === false) {
+        if(user.isEmailVerified === false && user.isMobileVerified === false) {
             return res.status(401).json(response("failed", "Mobile number not verified: please verify!"));
         }
 
