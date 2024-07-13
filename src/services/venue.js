@@ -1,7 +1,7 @@
 import db from '../models/index.js';
 const { Venue } = db;
 
-const createVenue = async (data) => {
+const createVenue = async (data, user) => {
     try {
         data.ownerId = user.id;
         const venue = await Venue.create(data);
