@@ -53,10 +53,10 @@ const createUser = async (req, res) => {
         // }
 
         await transaction.commit();
-        res.status(201).json(response("success", "Account created successful!", "data", { message: "Otp sent successfully", user }));
+        return res.status(201).json(response("success", "Account created successful!", "data", { message: "Otp sent successfully", user }));
     } catch (error) {
         await transaction.rollback();
-        res.status(500).json(response("error", error.message));
+        return res.status(500).json(response("error", error.message));
     }
 };
 
@@ -89,14 +89,16 @@ const sendOtp = async (req, res) => {
         const status  = await event.sendOtp(number, otp);
         if (email) {
             const emailStatus = await sendOtpEmail(email, otp);
-            res.status(200).json(response("success", `Otp to ${number} & ${email} sent successfully`));
+            return res.status(200).json(response("success", `Otp to ${number} & ${email} sent successfully`));
+        }
+        else {
+            return res.status(200).json(response("success", `Otp to ${number} sent successfully`));
         }
 
         // if (status !== 200) {
         //     return res.status(500).json(response("error", "Otp sending failed, please try again"));
         // }
 
-        res.status(200).json(response("success", `Otp to ${number} sent successfully`));
     } catch(error) {
         res.status(500).json(response("error", "otp sending failed"));
     }
@@ -117,9 +119,9 @@ const verifyNumber = async (req, res) => {
             return res.status(404).json(response("error", "Account with mobile not found"));
         }
 
-        res.status(200).json(response("success", "Mobile number verified successfully"));
+        return res.status(200).json(response("success", "Mobile number verified successfully"));
     } catch (error) {
-        res.status(500).json(response("error", "ERROR: " + error));
+        return res.status(500).json(response("error", "ERROR: " + error));
     }
 }
 
@@ -127,9 +129,9 @@ const getAllUsers = async (req, res) => {
     try {
         const { page = 1, pageSize = 10 } = req.query;
         const users = await userService.getAllUsers(page, pageSize);
-        res.status(200).json(response("success", "Users retrieved successfully", "users", users));
+        return res.status(200).json(response("success", "Users retrieved successfully", "users", users));
     } catch (error) {
-        res.status(500).json(response("error", error.message));
+        return res.status(500).json(response("error", error.message));
     }
 }
 

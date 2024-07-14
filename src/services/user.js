@@ -31,7 +31,7 @@ const validateUserCredentials = async (username, password) => {
 
 const getAllUsers = async (page, pageSize) => {
     try {
-        const pageNum = parseInt(page, 10) || 1;
+        const pageNum = parseInt(page, 1) || 1;
         const pageLimit = parseInt(pageSize, 10) || 10;
         const offset = (pageNum - 1) * pageLimit;
 

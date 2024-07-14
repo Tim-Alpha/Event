@@ -27,7 +27,7 @@ const verifyOTP = (mobileNumber, inputOTP) => {
     return regeneratedOTP === inputOTP;
 };
 
-const response = (status, message, dataName, data, pageNumber=null, maxPageSize=null, pageSize=null) => {
+const response = (status, message, dataName, data, pageNumber=null, maxPageSize=null, pageSize=null, totalCount=null) => {
     if (!pageNumber) {
         return {
             status: status,
@@ -41,6 +41,7 @@ const response = (status, message, dataName, data, pageNumber=null, maxPageSize=
         page: pageNumber,
         maxSize: maxPageSize,
         pageSize: pageSize,
+        totalCount: totalCount,
         [dataName]: data,
     };
 }
