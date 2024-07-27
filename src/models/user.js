@@ -23,9 +23,9 @@ const User = (sequelize) => {
         },
         firstName: {
             type: DataTypes.STRING(100),
-            allowNull: false,
+            allowNull: true,
             validate: {
-                notEmpty: true
+                notEmpty: false
             }
         },
         lastName: {
