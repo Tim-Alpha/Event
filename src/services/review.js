@@ -10,6 +10,26 @@ const createReview = async (reviewData) => {
     }
 };
 
+const getAllReviews = async (uuid) => {
+    try {
+        const review = await Review.findAll({
+            include: [{
+                model: db.User,
+                as: 'user',
+                foreignKey: 'userId'
+            },
+            {
+                model: db.Venue,
+                as: 'venue',
+                foreignKey: 'venueId'
+            }]
+        });
+        return review;
+    } catch (error) {
+        throw new Error("Failed to retrieve review: " + error);
+    }
+};
+
 const getReviewByUUID = async (uuid) => {
     try {
         const review = await Review.findOne({
@@ -81,4 +101,4 @@ const getAllReviewsByVenueID = async (venueId, page, pageSize) => {
     }
 };
 
-export { createReview, getReviewByUUID, updateReview, deleteReview, getAllReviewsByVenueID };
+export { createReview, getReviewByUUID, getAllReviews, updateReview, deleteReview, getAllReviewsByVenueID };

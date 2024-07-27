@@ -32,6 +32,15 @@ const createReview = async (req, res) => {
     }
 };
 
+const getAllReview = async (req, res) => {
+    try {
+        const result = await reviewService.getAllReviews();
+        res.status(200).json(response("success", "Review fetched successfully", "review", result));
+    } catch (error) {
+        res.status(500).json(response("error", "ERROR: " + error));
+    }
+};
+
 const getReviewByUUID = async (req, res) => {
     try {
         const { uuid } = req.query;
@@ -115,4 +124,4 @@ const getAllReviewsByVenueID = async (req, res) => {
     }
 };
 
-export { createReview, getReviewByUUID, updateReviewByUUID, deleteReviewByUUID, getAllReviewsByVenueID };
+export { createReview, getReviewByUUID, getAllReview, updateReviewByUUID, deleteReviewByUUID, getAllReviewsByVenueID };
