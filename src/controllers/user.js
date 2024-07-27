@@ -73,7 +73,12 @@ const userLogin = async (req, res) => {
         }
 
         const token = await middleware.generateToken(user);
-        res.status(200).json(response("success", "Login successful", "token", token));
+
+        const result = {
+            token: token,
+            user: user
+        }
+        res.status(200).json(response("success", "Login successful", "data", result));
     } catch (error) {
         res.status(500).json(response("error", "Login failed"));
     }
