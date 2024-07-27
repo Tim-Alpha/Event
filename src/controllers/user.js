@@ -156,7 +156,8 @@ const getUserByUUID = async (req, res) => {
 const getUserByToken = async (req, res) => {
     try {
         const userData = req.user;
-        res.status(200).json(response("success", "User fetched successfully", "user", userData));
+        const user = await userService.getUserByUUID(userData.uuid);
+        res.status(200).json(response("success", "User fetched successfully", "user", user));
     } catch (error) {
         res.status(500).json(response("error", "Something went wrong! " + error));
     }
