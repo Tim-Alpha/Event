@@ -69,7 +69,7 @@ const getVenueByUUID = async (uuid, user) => {
         const events = await Event.findAll({
             where: {
                 venueId: venue.id,
-                ...(isAdmin ? {} : isOwner ? {} : { user: user.id })
+                ...(isAdmin ? {} : isOwner ? {} : { userId: user.id })
             },
             order: [['createdAt', 'DESC']]
         });
