@@ -40,7 +40,7 @@ const getAllVenues = async (page, pageSize) => {
     }
 }
 
-const getVenueByUUID = async (uuid) => {
+const getVenueByUUID = async (uuid, user) => {
     try {
         const venue = await Venue.findOne({
             where: { uuid }, 
@@ -53,16 +53,28 @@ const getVenueByUUID = async (uuid) => {
                 model: db.Gallery,
                 as: "galleries",
                 foreignKey: "venueId"
-            }, 
-            {
-                model: db.Event,
-                as: "events",
-                foreignKey: "venueId"
             }]
         });
+
+        if (!venue) {
+            return null;
+        }
+
+        const isOwner = venue.ownerId === user.id;
+
+        const events = await db.Event.findAll({
+            where: {
+                venueId: venue.id,
+                ...(isOwner ? {} : { createdBy: user.id })
+            },
+            order: [['createdAt', 'DESC']]
+        });
+
+        venue.dataValues.events = events;
+
         return venue;
     } catch (error) {
-        throw new Error('Error in fetching venue: ' + error)
+        throw new Error('Error in fetching venue: ' + error);
     }
 }
 

@@ -45,12 +45,13 @@ const getAllVenues = async (req, res) => {
 const getVenueByUUID = async (req, res) => {
     try {
         let { uuid } = req.query;
+        let user = req.user;
 
         if (!uuid) {
             return res.status(400).json(response("failed", "missing uuid parameter"));
         }
         
-        const venue = await venueService.getVenueByUUID(uuid);
+        const venue = await venueService.getVenueByUUID(uuid, user);
         if (!venue) {
             return res.status(404).json(response("error", "Venue not found"));
         }
