@@ -1,6 +1,5 @@
-import { parse } from 'path';
 import db from '../models/index.js';
-const { Venue } = db;
+const { Venue, User, Gallery, Event } = db;
 
 const createVenue = async (data, user) => {
     try {
@@ -20,7 +19,7 @@ const getAllVenues = async (page, pageSize) => {
 
         const { count, rows } = await Venue.findAndCountAll({
             include: [{
-                model: db.User,
+                model: User,
                 as: 'owner',
                 foreignKey: 'ownerId'
             }],
@@ -41,16 +40,20 @@ const getAllVenues = async (page, pageSize) => {
 }
 
 const getVenueByUUID = async (uuid, user) => {
+    if (!user || !user.id) {
+        throw new Error('Invalid user data');
+    }
+
     try {
         const venue = await Venue.findOne({
             where: { uuid }, 
             include: [{
-                model: db.User,
+                model: User,
                 as: 'owner',
                 foreignKey: 'ownerId'
             },
             {
-                model: db.Gallery,
+                model: Gallery,
                 as: "galleries",
                 foreignKey: "venueId"
             }]
@@ -61,11 +64,12 @@ const getVenueByUUID = async (uuid, user) => {
         }
 
         const isOwner = venue.ownerId === user.id;
+        const isAdmin = user.role === 'A';
 
-        const events = await db.Event.findAll({
+        const events = await Event.findAll({
             where: {
                 venueId: venue.id,
-                ...(isOwner ? {} : { createdBy: user.id })
+                ...(isAdmin ? {} : isOwner ? {} : { createdBy: user.id })
             },
             order: [['createdAt', 'DESC']]
         });
@@ -78,12 +82,13 @@ const getVenueByUUID = async (uuid, user) => {
     }
 }
 
+
 const updateVenueByUUID = async (venueData, venue) => {
     try {
         await venue.update(venueData);
         return venue;
     } catch (error) {
-        throw new Error('Error in fetching venue: ' + error)
+        throw new Error('Error in updating venue: ' + error);
     }
 }
 
@@ -92,7 +97,7 @@ const deleteVenueByUUID = async (venue) => {
         await venue.destroy();
         return venue;
     } catch (error) {
-        throw new Error('Error in fetching venue: ' + error)
+        throw new Error('Error in deleting venue: ' + error);
     }
 }
 

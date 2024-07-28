@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/venues', middleware.verifyToken, venueController.createVenue);
 router.get('/venues/get_all', venueController.getAllVenues);
-router.get('/venue/get_by_uuid', venueController.getVenueByUUID);
+router.get('/venue/get_by_uuid', middleware.verifyToken, venueController.getVenueByUUID);
 router.put('/venue/update/:uuid', middleware.verifyToken, venueController.updateVenueByUUID);
 router.delete('/venue/delete', middleware.verifyToken, venueController.deleteVenueByUUID);
 

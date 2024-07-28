@@ -5,22 +5,22 @@ const createVenue = async (req, res) => {
     try {
         const venueData = req.body;
         const user = req.user;
-        if(!user) {
-            res.status(400).json({
+        if (!user) {
+            return res.status(400).json({
                 status: false,
                 message: "User not logged in"
             });
         }
         const venue = await venueService.createVenue(venueData, user);
         res.status(201).json({
-            "status": "success",
-            "message": "Venue created successfully",
-            "venue": venue
+            status: "success",
+            message: "Venue created successfully",
+            venue: venue
         });
     } catch (error) {
         res.status(500).json({
-            "status": "error",
-            "message": "Something went wrong!" + error
+            status: "error",
+            message: "Something went wrong! " + error
         });
     }
 }
@@ -46,19 +46,20 @@ const getVenueByUUID = async (req, res) => {
     try {
         let { uuid } = req.query;
         let user = req.user;
+        console.log("USER: ", user)
 
         if (!uuid) {
             return res.status(400).json(response("failed", "missing uuid parameter"));
         }
-        
+
         const venue = await venueService.getVenueByUUID(uuid, user);
         if (!venue) {
             return res.status(404).json(response("error", "Venue not found"));
         }
 
-        return res.status(200).json(response("success", "Venue fetched successfully", "venue", venue))
+        return res.status(200).json(response("success", "Venue fetched successfully", "venue", venue));
     } catch (error) {
-        return res.status(500).json(response("error", "Something went wrong!" + error)); 
+        return res.status(500).json(response("error", "Something went wrong! " + error));
     }
 }
 
@@ -76,21 +77,21 @@ const updateVenueByUUID = async (req, res) => {
             return res.status(400).json(response("failed", "missing uuid parameter"));
         }
 
-        let venue = await venueService.getVenueByUUID(uuid);
+        let venue = await venueService.getVenueByUUID(uuid, viewer);
 
         if (!venue) {
             return res.status(404).json(response("error", "Venue not found"));
         }
-        
-        if (!venue.dataValues.owner || viewer.dataValues.uuid !== venue.dataValues.owner.uuid) {
+
+        if (!venue.dataValues.owner || viewer.id !== venue.dataValues.owner.id) {
             return res.status(401).json(response("error", "Unauthorized"));
         }
-        
+
         venue = await venueService.updateVenueByUUID(venueData, venue);
 
-        return res.status(200).json(response("success", "Venue updated successfully", "venue", venue))
+        return res.status(200).json(response("success", "Venue updated successfully", "venue", venue));
     } catch (error) {
-        return res.status(500).json(response("error", "Something went wrong!" + error)); 
+        return res.status(500).json(response("error", "Something went wrong! " + error));
     }
 }
 
@@ -106,26 +107,25 @@ const deleteVenueByUUID = async (req, res) => {
         if (!uuid) {
             return res.status(400).json(response("failed", "missing uuid parameter"));
         }
-        
-        let venue = await venueService.getVenueByUUID(uuid);
+
+        let venue = await venueService.getVenueByUUID(uuid, viewer);
         if (!venue) {
             return res.status(404).json(response("error", "Venue not found"));
         }
-        
-        if (!venue.dataValues.owner || viewer.dataValues.uuid !== venue.dataValues.owner.uuid) {
+
+        if (!venue.dataValues.owner || viewer.id !== venue.dataValues.owner.id) {
             return res.status(401).json(response("error", "Unauthorized"));
         }
-        
-        const deletedVenue = venueService.deleteVenueByUUID(venue);
+
+        const deletedVenue = await venueService.deleteVenueByUUID(venue);
         if (!deletedVenue) {
             return res.status(404).json(response("error", "Venue not found"));
         }
 
-        return res.status(200).json(response("success", "Venue deleted successfully"))
+        return res.status(200).json(response("success", "Venue deleted successfully"));
     } catch (error) {
-        return res.status(500).json(response("error", "Something went wrong!" + error)); 
+        return res.status(500).json(response("error", "Something went wrong! " + error));
     }
 }
-
 
 export { createVenue, getAllVenues, getVenueByUUID, updateVenueByUUID, deleteVenueByUUID };
