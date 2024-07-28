@@ -74,7 +74,7 @@ const getVenueByUUID = async (uuid, user) => {
             order: [['createdAt', 'DESC']]
         });
 
-        venue.dataValues.events = events;
+        venue.dataValues.events = events || {};
 
         return venue;
     } catch (error) {
