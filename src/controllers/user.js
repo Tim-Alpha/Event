@@ -4,7 +4,7 @@ import * as event from '../event/sendOtp.js';
 import { response, generateOTP, verifyOTP } from '../services/utils.js';
 import db from '../models/index.js';
 import { sendOtpEmail } from '../event/sendOtpEmail.js';
-const { User, sequelize } = db;
+const { sequelize } = db;
 
 const restrictedUsernames = ["event", "admin", "eclipse", "guest", "test", "owner"];
 
@@ -21,7 +21,6 @@ const createUser = async (req, res) => {
             return res.status(400).json(response("failed", "Invalid mobile number"));
         }
 
-        const restrictedUsernames = ["event", "admin", "eclipse", "guest", "test"];
         if (restrictedUsernames.includes(userData.username.toLowerCase())) {
             return res.status(400).json(response("failed", "Username not allowed"));
         }
@@ -41,7 +40,7 @@ const createUser = async (req, res) => {
             return res.status(400).json(response("failed", "Username already exists"));
         }
 
-        const user = await User.create(userData, { transaction });
+        const user = await userService.createUser(userData, transaction);
 
         let otp = generateOTP(userData.mobile);
         const smsStatus = await event.sendOtp(userData.mobile, otp);

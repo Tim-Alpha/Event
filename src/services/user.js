@@ -2,9 +2,9 @@ import db from '../models/index.js';
 import bcrypt from 'bcrypt';
 const { User } = db;
 
-const createUser = async (userData) => {
+const createUser = async (userData, trnx) => {
     try {
-        const user = await User.create(userData);
+        const user = await User.create(userData, { trnx });
         return user;
     } catch (error) {
         throw new Error('Error creating the user: ' + error.message);
