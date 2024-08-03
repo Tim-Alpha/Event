@@ -37,7 +37,7 @@ const getAllVenues = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             status: "error",
-            message: "Something went wrong! " + error.message
+            message: "Something went wrong! " + error
         });
     }
 }
@@ -50,7 +50,7 @@ const getVenueByUUID = async (req, res) => {
             return res.status(400).json(response("failed", "missing uuid parameter"));
         }
 
-        const venue = await venueService.getVenueByUUID(uuid, user);
+        const venue = await venueService.getVenueByUUID(uuid);
         if (!venue) {
             return res.status(404).json(response("error", "Venue not found"));
         }
