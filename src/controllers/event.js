@@ -104,10 +104,10 @@ const getEventsByVenueUUID = async (req, res) => {
         }
 
         let events;
-        if (!user) {
+        if (user.dataValues.uuid == venue.dataValues.owner.uuid) {
             events = await eventService.getEventsByVenueUUID(venueUUID);
         } else {
-            events = await eventService.getEventsByVenueUUIDAndUser(venueUUID, user.dataValues.id);
+            events = await eventService.getEventsByUser(user.dataValues.id);
         }
 
         return res.status(200).json(response("success", "Events fetched successfully", "events", events));

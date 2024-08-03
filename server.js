@@ -25,7 +25,7 @@ app.use(v1, searchRouter);
 
 // Error handling middleware should be placed after all other middleware/route usage.
 app.use((err, req, res, next) => {
-    console.error(err.stack);
+    console.error(err);
     res.status(500).send('Something broke!');
 });
 

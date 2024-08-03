@@ -73,11 +73,10 @@ const getEventsByVenueUUID = async (venueUUID) => {
     }
 };
 
-const getEventsByVenueUUIDAndUser = async (venueUUID, userId) => {
+const getEventsByUser = async (userId) => {
     try {
         const events = await Event.findAll({
             where: {
-                venueId: venueUUID,
                 userId: userId
             },
             include: [{
@@ -119,4 +118,4 @@ const deleteEvent = async (event, transaction) => {
     }
 };
 
-export { createEvent, getAllEvents, getEventByUUID, getEventsByVenueUUID, getEventsByVenueUUIDAndUser, updateEvent, deleteEvent };
+export { createEvent, getAllEvents, getEventByUUID, getEventsByVenueUUID, getEventsByUser, updateEvent, deleteEvent };
