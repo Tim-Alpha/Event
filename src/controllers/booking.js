@@ -2,29 +2,29 @@ import * as bookingService from '../services/booking.js';
 import * as venueService from '../services/venue.js';
 import { response } from '../services/utils.js'
 
-const createBooking = async (req, res) => {
-    try {
-        const bookingData = req.body
-        const user = req.user
-        if (!user) {
-            res.status(404).json(response("failed", "User not found"))
-        }
+// const createBooking = async (req, res) => {
+//     try {
+//         const bookingData = req.body
+//         const user = req.user
+//         if (!user) {
+//             res.status(404).json(response("failed", "User not found"))
+//         }
 
-        const venue = await venueService.getVenueByUUID(bookingData.venueUUID);
-        if(!venue) {
-            res.status(404).json(response("failed", "Venue not found"))
-        }
+//         const venue = await venueService.getVenueByUUID(bookingData.venueUUID);
+//         if(!venue) {
+//             res.status(404).json(response("failed", "Venue not found"))
+//         }
 
-        let userId = user.dataValues.id
-        let venueId = venue.dataValues.id
-        const data = {...bookingData, userId, venueId}
+//         let userId = user.dataValues.id
+//         let venueId = venue.dataValues.id
+//         const data = {...bookingData, userId, venueId}
         
-        const booking = await bookingService.createBooking(data);
-        res.status(201).json(response("success", "Booked successfully", "booking", booking));
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+//         const booking = await bookingService.createBooking(data);
+//         res.status(201).json(response("success", "Booked successfully", "booking", booking));
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// };
 
 const getAllBooking = async (req, res) => {
     try {

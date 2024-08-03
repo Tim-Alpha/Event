@@ -12,11 +12,6 @@ const Booking = (sequelize) => {
             type: DataTypes.STRING(30),
             allowNull: false,
             field: 'status'
-        },
-        bookingDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            field: 'booking_date'
         }
     }, {
         tableName: "bookings",

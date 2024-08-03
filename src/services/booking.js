@@ -1,14 +1,14 @@
 import db from '../models/index.js';
 const { Booking } = db;
 
-const createBooking = async (bookingData) => {
-    try {
-        const booking = await Booking.create(bookingData);
-        return booking;
-    } catch (error) {
-        throw new Error("Failed to create booking: " + error);
-    }
-};
+// const createBooking = async (bookingData) => {
+//     try {
+//         const booking = await Booking.create(bookingData);
+//         return booking;
+//     } catch (error) {
+//         throw new Error("Failed to create booking: " + error);
+//     }
+// };
 
 const getAllBookings = async () => {
     try {
