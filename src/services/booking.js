@@ -1,14 +1,14 @@
 import db from '../models/index.js';
 const { Booking } = db;
 
-// const createBooking = async (bookingData) => {
-//     try {
-//         const booking = await Booking.create(bookingData);
-//         return booking;
-//     } catch (error) {
-//         throw new Error("Failed to create booking: " + error);
-//     }
-// };
+const createBooking = async (bookingData, transaction) => {
+    try {
+        const booking = await Booking.create(bookingData, { transaction });
+        return booking;
+    } catch (error) {
+        throw new Error("Failed to create booking: " + error);
+    }
+};
 
 const getAllBookings = async () => {
     try {
@@ -18,9 +18,9 @@ const getAllBookings = async () => {
                 as: 'user',
                 foreignKey: 'userId'
             }, {
-                model: db.Venue,
-                as: 'venue',
-                foreignKey: 'venueId'
+                model: db.Event,
+                as: 'event',
+                foreignKey: 'eventId'
             }]
         });
         return bookings;
@@ -38,9 +38,9 @@ const getBookingByUUID = async (uuid) => {
                 as: 'user',
                 foreignKey: 'userId'
             }, {
-                model: db.Venue,
-                as: 'venue',
-                foreignKey: 'venueId'
+                model: db.Event,
+                as: 'event',
+                foreignKey: 'eventId'
             }]
         });
         return booking;

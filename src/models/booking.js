@@ -10,8 +10,7 @@ const Booking = (sequelize) => {
         },
         status: {
             type: DataTypes.STRING(30),
-            allowNull: false,
-            field: 'status'
+            allowNull: false
         }
     }, {
         tableName: "bookings",
@@ -37,13 +36,12 @@ const Booking = (sequelize) => {
         delete attributes.deletedAt;
         delete attributes.userId;
         delete attributes.venueId;
-
         return attributes;
     }
 
     Booking.associate = (models) => {
         Booking.belongsTo(models.User, { foreignKey: 'userId', as: 'user', onDelete: 'CASCADE' });
-        Booking.belongsTo(models.Event, { foreignKey: 'venueId', as: 'venue', onDelete: 'CASCADE' });
+        Booking.belongsTo(models.Event, { foreignKey: 'eventId', as: 'event', onDelete: 'CASCADE' });
     };
 
     return Booking;
