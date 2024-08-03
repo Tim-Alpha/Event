@@ -45,8 +45,6 @@ const getAllVenues = async (req, res) => {
 const getVenueByUUID = async (req, res) => {
     try {
         let { uuid } = req.query;
-        let user = req.user;
-        console.log("USER: ", user)
 
         if (!uuid) {
             return res.status(400).json(response("failed", "missing uuid parameter"));

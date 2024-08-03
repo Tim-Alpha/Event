@@ -39,48 +39,33 @@ const getAllVenues = async (page, pageSize) => {
     }
 }
 
-const getVenueByUUID = async (uuid, user) => {
-    if (!user || !user.id) {
-        throw new Error('Invalid user data');
-    }
-
+const getVenueByUUID = async (uuid) => {
     try {
         const venue = await Venue.findOne({
-            where: { uuid }, 
-            include: [{
-                model: User,
-                as: 'owner',
-                foreignKey: 'ownerId'
-            },
-            {
-                model: Gallery,
-                as: "galleries",
-                foreignKey: "venueId"
-            }]
+            where: { uuid },
+            include: [
+                {
+                    model: User,
+                    as: 'owner',
+                    foreignKey: 'ownerId'
+                },
+                {
+                    model: Gallery,
+                    as: "galleries",
+                    foreignKey: "venueId"
+                }
+            ]
         });
 
         if (!venue) {
             return null;
         }
 
-        const isOwner = venue.ownerId === user.id;
-        const isAdmin = user.role === 'A';
-
-        const events = await Event.findAll({
-            where: {
-                venueId: venue.id,
-                ...(isAdmin ? {} : isOwner ? {} : { userId: user.id })
-            },
-            order: [['createdAt', 'DESC']]
-        });
-
-        venue.dataValues.events = events || {};
-
         return venue;
     } catch (error) {
         throw new Error('Error in fetching venue: ' + error);
     }
-}
+};
 
 
 const updateVenueByUUID = async (venueData, venue) => {
