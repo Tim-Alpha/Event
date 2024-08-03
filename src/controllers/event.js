@@ -94,20 +94,18 @@ const getEventsByVenueUUID = async (req, res) => {
         const venueUUID = req.params.venueUUID;
         const user = req.user;
 
-        // if (!user) {
-        //     return res.status(401).json(response("error", "User not logged in"));
-        // }
-
         const venue = await venueService.getVenueByUUID(venueUUID);
         if (!venue) {
             return res.status(404).json(response("error", "Venue with UUID not found"));
         }
 
         let events;
-        if (user.dataValues.uuid == venue.dataValues.owner.uuid) {
+        if (user && user.dataValues.uuid == venue.dataValues.owner.uuid) {
             events = await eventService.getEventsByVenueUUID(venueUUID);
-        } else {
+        } else if (user) {
             events = await eventService.getEventsByUser(user.dataValues.id);
+        } else {
+            events = await eventService.getEventsByVenueUUID(venueUUID);
         }
 
         return res.status(200).json(response("success", "Events fetched successfully", "events", events));
@@ -115,6 +113,7 @@ const getEventsByVenueUUID = async (req, res) => {
         return res.status(500).json(response("error", "ERROR: " + error));
     }
 }
+
 
 const updateEventByUUID = async (req, res) => {
     const transaction = await db.sequelize.transaction();
