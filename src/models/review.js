@@ -36,6 +36,8 @@ const Review = ( sequelize ) => {
     Review.prototype.toJSON = function () {
         let attributes = Object.assign({}, this.get());
         delete attributes.id;
+        delete attributes.userId;
+        delete attributes.venueId;
         delete attributes.deletedAt;
         return attributes;
     };

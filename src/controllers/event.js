@@ -94,9 +94,9 @@ const getEventsByVenueUUID = async (req, res) => {
         const venueUUID = req.params.venueUUID;
         const user = req.user;
 
-        if (!user) {
-            return res.status(401).json(response("error", "User not logged in"));
-        }
+        // if (!user) {
+        //     return res.status(401).json(response("error", "User not logged in"));
+        // }
 
         const venue = await venueService.getVenueByUUID(venueUUID);
         if (!venue) {
@@ -104,7 +104,7 @@ const getEventsByVenueUUID = async (req, res) => {
         }
 
         let events;
-        if (venue.userId === user.dataValues.id) {
+        if (!user) {
             events = await eventService.getEventsByVenueUUID(venueUUID);
         } else {
             events = await eventService.getEventsByVenueUUIDAndUser(venueUUID, user.dataValues.id);
