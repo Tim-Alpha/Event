@@ -103,7 +103,7 @@ const getEventsByVenueUUID = async (req, res) => {
         if (user && user.dataValues.uuid == venue.dataValues.owner.uuid) {
             events = await eventService.getEventsByVenueUUID(venueUUID);
         } else if (user) {
-            events = await eventService.getEventsByUser(user.dataValues.id);
+            events = await eventService.getEventsByUser(venue.dataValues.id, user.dataValues.id);
         } else {
             events = await eventService.getEventsByVenueUUID(venueUUID);
         }
