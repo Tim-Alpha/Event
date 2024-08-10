@@ -10,7 +10,7 @@ import reviewRouter from './src/routers/review.js';
 import searchRouter from './src/routers/search.js';
 
 const app = express();
-const port = 3001;
+const port = 5000;
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
