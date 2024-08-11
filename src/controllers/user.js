@@ -295,7 +295,15 @@ const updateProfile = async (req, res) => {
 
 
             // Upload to Firebase
-            const fileName = `${user.id}_profile.jpg`; // Create a unique filename
+            let fileName = `${user.id}_profile.jpg`;
+            // Get a formatted date string
+            const date = new Date();
+            const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+            const time = date.toISOString().split('T')[1].split('.')[0].replace(/:/g, '-'); // HH-MM-SS format
+
+            // Combine the date and time with the file name
+            const cleanFileName = `${formattedDate}_${time}_${fileName}`;
+            fileName = `profiles/${cleanFileName}`;
             const fileURL = await uploadFileOnFirebase(fileName, jpgBuffer, metadata);
 
             if (!fileURL) {
