@@ -7,16 +7,8 @@ const storage = getStorage(app);
 
 const uploadFileOnFirebase = async (fileName, buffer, metadata) => {
     try {
-        // Get a formatted date string
-        const date = new Date();
-        const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
-        const time = date.toISOString().split('T')[1].split('.')[0].replace(/:/g, '-'); // HH-MM-SS format
-
-        // Combine the date and time with the file name
-        const cleanFileName = `${formattedDate}_${time}_${fileName}`;
-
         // Create a storage reference
-        const storageRef = ref(storage, `profiles/${cleanFileName}`);
+        const storageRef = ref(storage, fileName);
 
         // Upload file and metadata to the object 'images/mountains.jpg'
         const uploadTask = uploadBytesResumable(storageRef, buffer, metadata);
