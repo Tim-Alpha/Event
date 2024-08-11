@@ -5,6 +5,7 @@ import * as middleware from '../middlewares/authentication.js';
 const router = express.Router();
 
 router.post('/users', UserController.createUser);
+router.put('/users/profile/update', middleware.verifyToken, UserController.updateProfile);
 router.post('/users/login', UserController.userLogin);
 router.post('/users/verify/number', UserController.verifyNumber);
 router.post('/users/send/otp', UserController.sendOtp);
