@@ -16,7 +16,7 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         unique: true
       },
-      venueName: {
+      name: {
         type: Sequelize.STRING(255),
         allowNull: false
       },

@@ -1,9 +1,9 @@
 import db from '../models/index.js';
 const { Gallery } = db;
 
-const createGallery = async (file, fileType) => {
+const createGallery = async (file, fileType, venueUUID) => {
     try {
-        const gallery = await Gallery.create({ gallery_url: file, url_type: fileType });
+        const gallery = await Gallery.create({ gallery_url: file, url_type: fileType, venue: venueUUID });
         return gallery;
     } catch (error) {
         throw new Error("Failed to create gallery" + error);

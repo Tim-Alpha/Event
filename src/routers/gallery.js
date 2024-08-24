@@ -4,7 +4,7 @@ import * as middleware from '../middlewares/authentication.js';
 
 const router = express.Router();
 
-router.post('/gallery/create', middleware.verifyToken, galleryController.createGallery);
+router.post('/gallery/:uuid/create', middleware.verifyToken, galleryController.createGallery);
 router.get('/gallery/get_all', middleware.verifyToken, galleryController.getAllGallery);
 router.get('/gallery/get_by_uuid', middleware.verifyToken, galleryController.getGalleryByUUID);
 router.put('/gallery/update', middleware.verifyToken, galleryController.updateGallery);

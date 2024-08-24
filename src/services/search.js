@@ -46,7 +46,7 @@ const SearchVenues = async (mixed, page, pageSize) => {
         const { count, rows } = await Venue.findAndCountAll({
             where: {
                 [Op.or]: [
-                    { venueName: { [Op.like]: `%${mixed}%` } },
+                    { name: { [Op.like]: `%${mixed}%` } },
                     { location: { [Op.like]: `%${mixed}%` } },
                     { description: { [Op.like]: `%${mixed}%` } }
                 ]
