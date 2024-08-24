@@ -7,7 +7,7 @@ const Venue = (sequelize) => {
             defaultValue: DataTypes.UUIDV4,
             unique: true
         },
-        venueName: {
+        name: {
             type: DataTypes.STRING(255),
             allowNull: false,
         },
