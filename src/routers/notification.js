@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/notification/create', middleware.verifyToken, notificationController.createNotification);
 router.get('/notification/get', middleware.verifyToken, notificationController.getAllNotification);
-router.put('/notification/update', middleware.verifyToken, notificationController.updateNotificationByUUID);
+router.put('/notification/:uuid/update', middleware.verifyToken, notificationController.updateNotificationByUUID);
 router.delete('/notification/delete', middleware.verifyToken, notificationController.deleteNotificationByUUID);
 
 export default router;
