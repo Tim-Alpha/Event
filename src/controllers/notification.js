@@ -11,7 +11,7 @@ const createNotification = async (req, res) => {
         }
 
         const notificationData = {
-            user_id: user.dataValues.id,
+            userId: user.dataValues.id,
             content,
             action_type
         };

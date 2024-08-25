@@ -1,6 +1,7 @@
 import * as reviewService from '../services/review.js';
 import * as venueService from '../services/venue.js';
 import { response } from '../services/utils.js';
+import * as notificationService from '../services/notification.js'
 
 const createReview = async (req, res) => {
     try {
@@ -26,6 +27,18 @@ const createReview = async (req, res) => {
         };
 
         const result = await reviewService.createReview(reviewData);
+        const notificationData1 = {
+            user_id: venue.dataValues.owner.id,
+            content: `${user.dataValues.username} just post a review on ${venue.dataValues.name}`,
+            action_type: "REVIEW"
+        };
+        const notificationData2 = {
+            user_id: user.dataValues.id,
+            content: `You just submit a review for ${venue.dataValues.name}`,
+            action_type: "REVIEW"
+        };
+        await notificationService.createNotification(notificationData1);
+        await notificationService.createNotification(notificationData2);
         res.status(201).json(response("success", "Review created successfully", "review", result));
     } catch (error) {
         res.status(500).json(response("error", "ERROR: " + error));

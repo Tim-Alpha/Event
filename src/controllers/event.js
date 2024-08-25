@@ -1,6 +1,7 @@
 import * as eventService from '../services/event.js';
 import { response } from '../services/utils.js';
 import * as venueService from '../services/venue.js';
+import * as notificationService from '../services/notification.js'
 import db from '../models/index.js';
 
 const createEvent = async (req, res) => {
@@ -57,8 +58,20 @@ const createEvent = async (req, res) => {
             userId: user.dataValues.id,
             venueId: venue.dataValues.id
         }
-
+        console.log("VENUE: --> ", venue);
         const result = await eventService.createEvent(eventData, bookingData, transaction);
+        const notificationData1 = {
+            userId: user.dataValues.id,
+            content: `You just request an event booking on ${venue.dataValues.name}`,
+            action_type: "BOOKING"
+        };
+        const notificationData2 = {
+            userId: venue.dataValues.owner.id,
+            content: `${user.dataValues.username} just request an event booking on ${venue.dataValues.name}`,
+            action_type: "BOOKING"
+        };
+        await notificationService.createNotification(notificationData1);
+        await notificationService.createNotification(notificationData2);
         await transaction.commit();
         return res.status(200).json(response("success", "Event created successfully", "event", result));
     } catch (error) {
