@@ -26,8 +26,7 @@ const createNotification = async (req, res) => {
 const getAllNotification = async (req, res) => {
     try {
         const userData = req.user;
-
-        const notifications = await notificationService.getAllNotifications(userData.id);
+        const notifications = await notificationService.getAllNotifications(userData.dataValues.id);
 
         return res.status(200).json(response("success", "Notifications retrieved successfully", "notifications", notifications));
     } catch (error) {
