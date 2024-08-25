@@ -52,10 +52,10 @@ const getEventByUUID = async (uuid) => {
     }
 };
 
-const getEventsByVenueUUID = async (venueUUID) => {
+const getEventsByVenueUUID = async (venueId) => {
     try {
         const events = await Event.findAll({
-            where: { venueId: venueUUID },
+            where: { venue_id: venueId },
             include: [{
                 model: db.User,
                 as: 'user',

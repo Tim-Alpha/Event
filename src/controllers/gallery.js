@@ -92,7 +92,7 @@ const createGallery = async (req, res) => {
             if (!fileURL) {
                 return res.status(500).json(response("error", "File upload failed"));
             }
-            const createdGallery = await galleryService.createGallery(fileURL, 'jpg', venueUUID);
+            const createdGallery = await galleryService.createGallery(fileURL, 'jpg', venue.dataValues.id);
 
             res.status(201).json(response("success", "Gallery created successfully", "gallery", createdGallery));
         } catch (error) {
@@ -104,12 +104,13 @@ const createGallery = async (req, res) => {
 
 const getAllGallery = async (req, res) => {
     try {
-        let viewer = req.user;
-
-        if (!viewer) {
-            return res.status(400).json(response("failed", "user not logged in"));
+        const { uuid: venueUUID } = req.params;
+        const venue = await venueService.getVenueByUUID(venueUUID);
+        if (!venue) {
+            return res.status(404).json(response("failed", "Venue not found"));
         }
-        const allGalleries = await galleryService.getAllGalleries();
+
+        const allGalleries = await galleryService.getAllGalleries(venue.dataValues.id);
         res.json(response("success", "All galleries retrieved successfully", "galleries", allGalleries));
     } catch (error) {
         res.status(500).json(response("error", error.message));

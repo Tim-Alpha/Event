@@ -1,18 +1,18 @@
 import db from '../models/index.js';
 const { Gallery } = db;
 
-const createGallery = async (file, fileType, venueUUID) => {
+const createGallery = async (file, fileType, venueID) => {
     try {
-        const gallery = await Gallery.create({ gallery_url: file, url_type: fileType, venue: venueUUID });
+        const gallery = await Gallery.create({ gallery_url: file, url_type: fileType, venue_id: venueID });
         return gallery;
     } catch (error) {
         throw new Error("Failed to create gallery" + error);
     }
 };
 
-const getAllGalleries = async () => {
+const getAllGalleries = async (venueID) => {
     try {
-        const galleries = await Gallery.findAll();
+        const galleries = await Gallery.findAll({ where: { venue_id: venueID } });
         return galleries;
     } catch (error) {
         throw new Error("Failed to retrieve galleries" + error);

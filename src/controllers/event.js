@@ -93,7 +93,7 @@ const getEventsByVenueUUID = async (req, res) => {
     try {
         const venueUUID = req.params.venueUUID;
         const user = req.user;
-
+        console.log("VENUE UUID: -> " + venueUUID, user);
         const venue = await venueService.getVenueByUUID(venueUUID);
         if (!venue) {
             return res.status(404).json(response("error", "Venue with UUID not found"));
@@ -101,7 +101,7 @@ const getEventsByVenueUUID = async (req, res) => {
 
         let events;
         if (user && user.dataValues.uuid == venue.dataValues.owner.uuid) {
-            events = await eventService.getEventsByVenueUUID(venueUUID);
+            events = await eventService.getEventsByVenueUUID(venue.dataValues.id);
         } else if (user) {
             events = await eventService.getEventsByUser(venue.dataValues.id, user.dataValues.id);
         } else {
