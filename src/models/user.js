@@ -88,6 +88,7 @@ const User = (sequelize) => {
     // Define the association between Other models and User models
     User.associate = (models) => {
         User.hasMany(models.Venue, { foreignKey: 'ownerId', as: 'venues', onDelete: 'CASCADE' });
+        User.hasMany(models.Notification, { foreignKey: 'userId', as: 'notification', onDelete: 'CASCADE' });
         User.hasMany(models.Token, { foreignKey: 'userId', as: 'tokens', onDelete: 'CASCADE' });
         User.hasMany(models.Event, { foreignKey: 'userId', as: 'events', onDelete: 'CASCADE' });
         User.hasMany(models.Review, { foreignKey: 'userId', as: 'review', onDelete: 'CASCADE' });

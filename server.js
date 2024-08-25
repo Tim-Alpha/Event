@@ -9,6 +9,7 @@ import bookingRouter from './src/routers/booking.js';
 import reviewRouter from './src/routers/review.js';
 import searchRouter from './src/routers/search.js';
 import galleryRouter from './src/routers/gallery.js';
+import notificationRouter from './src/routers/notification.js';
 
 const app = express();
 const port = 5000;
@@ -24,6 +25,7 @@ app.use(v1, bookingRouter);
 app.use(v1, reviewRouter);
 app.use(v1, searchRouter);
 app.use(v1, galleryRouter);
+app.use(v1, notificationRouter);
 
 // Error handling middleware should be placed after all other middleware/route usage.
 app.use((err, req, res, next) => {
